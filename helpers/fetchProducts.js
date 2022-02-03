@@ -1,11 +1,9 @@
-const fetch = require('node-fetch');
-
-const fetchProducts = async () => {
+const fetchProducts = async (produto) => {
   // seu código aqui
-  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  const url = `https://api.mercadolibre.com/sites/MLB/search?q=${produto}`;
 
   const result = await (await fetch(url)).json();
-  console.log(result.results);
+  return result.results;
 };
 
 if (typeof module !== 'undefined') {
@@ -13,5 +11,3 @@ if (typeof module !== 'undefined') {
     fetchProducts,
   };
 }
-
-fetchProducts();
