@@ -32,6 +32,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   const pai = event.target.parentElement;
   pai.removeChild(event.target);
+  saveCartItems();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -59,8 +60,22 @@ btnAdd.addEventListener('click', async (elemento) => {
   const produto = await fetchItem(idProdutoClick);
   const objeto = { sku: produto.id, name: produto.title, salePrice: produto.price };
   car.appendChild(createCartItemElement(objeto));
+  saveCartItems();
 });
+
+function itensCarSave() {
+  const car = document.querySelector('.cart__items');
+  const itensSalvos = getSavedCartItems();
+  itensSalvos.forEach((conteudo) => {
+    const li = document.createElement('li');
+    li.className = 'cart__item';
+    li.innerText = conteudo;
+    li.addEventListener('click', cartItemClickListener);
+    car.appendChild(li);
+  });
+}
 
 window.onload = () => {
   createProduct();
+  itensCarSave();
 };
