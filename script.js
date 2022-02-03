@@ -28,11 +28,24 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function somaValores() {  
+  const conteudoCar = document.querySelectorAll('.cart__items li');
+  const pegaValor = [...conteudoCar].map((item) => item.innerHTML.split('$')[1])
+  .reduce((total, valor) => total + (parseInt(valor, 10)), 0);
+  return pegaValor;
+}
+
+function valorCompra() {
+  const totalCar = document.querySelector('.total-price');
+  totalCar.innerHTML = `Total: R$ ${somaValores()}`;
+}
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const pai = event.target.parentElement;
-  pai.removeChild(event.target);
+  pai.removeChild(event.target);  
   saveCartItems();
+  valorCompra();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -54,17 +67,17 @@ async function createProduct() {
 
 const btnAdd = document.querySelector('.items');
 
+const car = document.querySelector('.cart__items');
 btnAdd.addEventListener('click', async (elemento) => {
-  const car = document.querySelector('.cart__items');
   const idProdutoClick = elemento.target.parentNode.firstChild.innerText;
   const produto = await fetchItem(idProdutoClick);
   const objeto = { sku: produto.id, name: produto.title, salePrice: produto.price };
   car.appendChild(createCartItemElement(objeto));
   saveCartItems();
+  valorCompra();
 });
 
 function itensCarSave() {
-  const car = document.querySelector('.cart__items');
   const itensSalvos = getSavedCartItems();
   itensSalvos.forEach((conteudo) => {
     const li = document.createElement('li');
@@ -72,6 +85,7 @@ function itensCarSave() {
     li.innerText = conteudo;
     li.addEventListener('click', cartItemClickListener);
     car.appendChild(li);
+    valorCompra();
   });
 }
 
