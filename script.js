@@ -84,7 +84,7 @@ btnAdd.addEventListener('click', async (elemento) => {
 });
 
 function itensCarSave() {
-  const itensSalvos = getSavedCartItems();
+  const itensSalvos = getSavedCartItems('cartItems');
   JSON.parse(itensSalvos).forEach((conteudo) => {
     const li = document.createElement('li');
     li.className = 'cart__item';
