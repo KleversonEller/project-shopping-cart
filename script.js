@@ -24,6 +24,12 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
+function valoresASalvar() {
+  const conteudoCar = document.querySelectorAll('.cart__items li');
+  const conteudoSalvar = [...conteudoCar].map((item) => item.innerHTML);
+  return JSON.stringify(conteudoSalvar);
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -44,7 +50,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   const pai = event.target.parentElement;
   pai.removeChild(event.target);  
-  saveCartItems();
+  saveCartItems(valoresASalvar());
   valorCompra();
 }
 
@@ -73,13 +79,13 @@ btnAdd.addEventListener('click', async (elemento) => {
   const produto = await fetchItem(idProdutoClick);
   const objeto = { sku: produto.id, name: produto.title, salePrice: produto.price };
   car.appendChild(createCartItemElement(objeto));
-  saveCartItems();
+  saveCartItems(valoresASalvar());
   valorCompra();
 });
 
 function itensCarSave() {
   const itensSalvos = getSavedCartItems();
-  itensSalvos.forEach((conteudo) => {
+  JSON.parse(itensSalvos).forEach((conteudo) => {
     const li = document.createElement('li');
     li.className = 'cart__item';
     li.innerText = conteudo;

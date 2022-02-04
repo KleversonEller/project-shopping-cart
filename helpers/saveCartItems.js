@@ -1,8 +1,6 @@
-const saveCartItems = () => {
+const saveCartItems = (parametro) => {
   // seu código aqui
-  const conteudoCar = document.querySelectorAll('.cart__items li');
-  const conteudoSalvar = [...conteudoCar].map((item) => item.innerHTML);
-  localStorage.setItem('cartItems', JSON.stringify(conteudoSalvar));
+  localStorage.setItem('cartItems', parametro);
 };
 
 if (typeof module !== 'undefined') {
