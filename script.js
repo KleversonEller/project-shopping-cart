@@ -31,13 +31,13 @@ function getSkuFromProductItem(item) {
 function somaValores() {  
   const conteudoCar = document.querySelectorAll('.cart__items li');
   const pegaValor = [...conteudoCar].map((item) => item.innerHTML.split('$')[1])
-  .reduce((total, valor) => total + (parseInt(valor, 10)), 0);
+  .reduce((total, valor) => total + (parseFloat(valor)), 0);
   return pegaValor;
 }
 
 function valorCompra() {
   const totalCar = document.querySelector('.total-price');
-  totalCar.innerHTML = `Total: R$ ${somaValores()}`;
+  totalCar.innerHTML = somaValores();
 }
 
 function cartItemClickListener(event) {
@@ -59,7 +59,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 async function createProduct() {
   const section = document.querySelector('.items');
   const produtos = await fetchProducts('computador');
-  produtos.forEach(({ id, title, thumbnail }) => {
+  produtos.results.forEach(({ id, title, thumbnail }) => {
     const objeto = { sku: id, name: title, image: thumbnail };
     section.appendChild(createProductItemElement(objeto));
   });
@@ -88,8 +88,7 @@ function itensCarSave() {
     valorCompra();
   });
 }
-
-window.onload = () => {
-  createProduct();
+window.onload = async () => {
+  await createProduct();
   itensCarSave();
 };
