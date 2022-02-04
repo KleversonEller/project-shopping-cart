@@ -30,10 +30,6 @@ function valoresASalvar() {
   return JSON.stringify(conteudoSalvar);
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 function somaValores() {  
   const conteudoCar = document.querySelectorAll('.cart__items li');
   const pegaValor = [...conteudoCar].map((item) => item.innerHTML.split('$')[1])
@@ -61,10 +57,18 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+const section = document.querySelector('.items');
+
+function loading() {
+  const span = document.createElement('span');
+  span.innerHTML = 'carregando';
+  span.className = 'loading';
+  section.appendChild(span);
+}
 
 async function createProduct() {
-  const section = document.querySelector('.items');
   const produtos = await fetchProducts('computador');
+  section.removeChild(document.querySelector('.loading'));
   produtos.results.forEach(({ id, title, thumbnail }) => {
     const objeto = { sku: id, name: title, image: thumbnail };
     section.appendChild(createProductItemElement(objeto));
@@ -94,7 +98,21 @@ function itensCarSave() {
     valorCompra();
   });
 }
+
+const btnRemove = document.querySelector('.empty-cart');
+
+btnRemove.addEventListener('click', () => {
+  const produtosCar = document.querySelectorAll('.cart__items .cart__item');
+  produtosCar.forEach((item) => {
+    const pai = item.parentNode;
+    pai.removeChild(item);
+  });
+  saveCartItems(valoresASalvar());
+  valorCompra();
+});
+
 window.onload = async () => {
-  await createProduct();
+  loading();
+  await createProduct();  
   itensCarSave();
 };
